@@ -1,0 +1,84 @@
+__global__ void GaussianBlurKernel(Color* input, Color* output, float* kernel, int width, int height, int kernelSize) {
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (col < width && row < height) {
+        float r = 0.0f, g = 0.0f, b = 0.0f;
+        int kernelRadius = kernelSize / 2;
+
+        for (int i = -kernelRadius; i <= kernelRadius; ++i) {
+            for (int j = -kernelRadius; j <= kernelRadius; ++j) {
+                int sampleX = min(max(col + i, 0), width - 1);
+                int sampleY = min(max(row + j, 0), height - 1);
+
+                float kernelValue = kernel[(i + kernelRadius) * kernelSize + (j + kernelRadius)];
+
+                Color sampleColor = input[sampleY * width + sampleX];
+                r += sampleColor.r * kernelValue;
+                g += sampleColor.g * kernelValue;
+                b += sampleColor.b * kernelValue;
+            }
+        }
+
+        output[row * width + col] = make_Color(r, g, b);
+    }
+}
+
+float* Flatten2DKernel(float** twoDKernel, int kernelSize) {
+    float* flatKernel = new float[kernelSize * kernelSize];
+    
+    for (int i = 0; i < kernelSize; ++i) {
+        for (int j = 0; j < kernelSize; ++j) {
+            flatKernel[i * kernelSize + j] = twoDKernel[i][j];
+        }
+    }
+
+    return flatKernel;
+}
+
+
+void Image::GaussianBlur(int kernelSize, float sigma) {
+    // First, flatten your 2D kernel into a 1D array for CUDA
+    float** twoDKernel = CreateGaussianKernel(kernelSize, sigma);
+
+    float* flatKernel = Flatten2DKernel(twoDKernel, kernelSize);
+    // ...populate the flatKernel with your Gaussian values...
+
+    // Allocate memory on the GPU
+    Color* dev_input;
+    Color* dev_output;
+    float* dev_kernel;
+    cudaMalloc(&dev_input, m_width * m_height * sizeof(Color));
+    cudaMalloc(&dev_output, m_width * m_height * sizeof(Color));
+    cudaMalloc(&dev_kernel, kernelSize * kernelSize * sizeof(float));
+    // Copy data to the GPU
+    cudaMemcpy(dev_input, m_colors, m_width * m_height * sizeof(Color), cudaMemcpyHostToDevice);
+    cudaMemcpy(dev_kernel, flatKernel, kernelSize * kernelSize * sizeof(float), cudaMemcpyHostToDevice);
+
+    // Define block and grid sizes
+    dim3 blockDim(16, 16); // Adjust these values as needed
+    dim3 gridDim((m_width + blockDim.x - 1) / blockDim.x, (m_height + blockDim.y - 1) / blockDim.y);
+
+    // Launch the kernel
+    GaussianBlurKernel<<<gridDim, blockDim>>>(dev_input, dev_output, dev_kernel, m_width, m_height, kernelSize);
+
+    // Copy the modified image back to the host
+    cudaMemcpy(m_colors, dev_output, m_width * m_height * sizeof(Color), cudaMemcpyDeviceToHost);
+
+    // Free GPU memory
+    cudaFree(dev_input);
+    cudaFree(dev_output);
+    cudaFree(dev_kernel);
+
+    // Free the flat kernel array
+    delete[] flatKernel;
+}
+
+__device__ Color make_Color(float r, float g, float b) {
+    Color color;
+    color.r = r;
+    color.g = g;
+    color.b = b;
+    return color;
+}
+
