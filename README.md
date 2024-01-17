@@ -13,6 +13,9 @@ This project is a C++ application designed for basic image processing. It includ
 ## Usage
 
 Run the compiled program with the desired operations:
+
 ```./image_processor <filename> <operation> [additional args]```
+
 For example:
+
 ```./image_processor sample.bmp -fv -g 5 1.0```
