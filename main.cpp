@@ -58,6 +58,40 @@ int main(int argc, char* argv[])
         } else if (arg == "-edge") {
             process += "_edgeDetect";
             image.LaplacianEdgeDetection();
+        } else if (arg == "-stretchL") {
+            if (i + 1 >= argc) {
+                std::cerr << "Stretch requires start position value (decimal > 0 and < 1)" << std::endl;
+                return 1;
+            }
+            float pos = std::atof(argv[++i]);
+            process += "_stretchL";
+            image.StretchH(pos, false);
+        } else if (arg == "-stretchR") {
+            if (i + 1 >= argc) {
+                std::cerr << "Stretch requires start position value (decimal > 0 and < 1)" << std::endl;
+                return 1;
+            }
+            float pos = std::atof(argv[++i]);
+            process += "_stretchR";
+            image.StretchH(pos, true);
+        } else if (arg == "-stretchU") {
+            if (i + 1 >= argc) {
+                std::cerr << "Stretch requires start position value (decimal > 0 and < 1)" << std::endl;
+                return 1;
+            }
+            float pos = std::atof(argv[++i]);
+            process += "_stretchU";
+            image.StretchV(pos, true);
+
+        } else if (arg == "-stretchD") {
+            if (i + 1 >= argc) {
+                std::cerr << "Stretch requires start position value (decimal > 0 and < 1)" << std::endl;
+                return 1;
+            }
+            float pos = std::atof(argv[++i]);
+            process += "_stretchD";
+            image.StretchV(pos, false);
+
         }
     }
     filename = filename.substr(0, filename.size()-4);

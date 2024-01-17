@@ -387,5 +387,64 @@ void Image::LaplacianEdgeDetection() {
     }
 }
 
+void Image::StretchH(float i, bool l_r)
+{
+    if(i > 1 || i < 0) return;
+    if(l_r) 
+    {
+        for(int col = 0; col < m_width; col++)
+        {
+            for(int row = 0; row < m_height; row++)
+            {
+                if(col > m_width * i) {
+                    SetColor(GetColor(m_width * i,row), col, row);
+                }
+            }
+        }
+    }
+    else 
+    {
+        for(int col = 0; col < m_width; col++)
+        {
+            for(int row = 0; row < m_height; row++)
+            {
+                if(col < m_width * i) {
+                    SetColor(GetColor(m_width * i,row), col, row);
+                }
+            }
+        }
+    }
+    
+    
+}
 
-
+void Image::StretchV(float i, bool u_d)
+{
+    if(i > 1 || i < 0) return;
+    if(u_d) 
+    {
+        for(int col = 0; col < m_width; col++)
+        {
+            for(int row = 0; row < m_height; row++)
+            {
+                if(row > m_height * (1-i)) {
+                    SetColor(GetColor(col, m_height * (1-i)), col, row);
+                }
+            }
+        }
+    }
+    else 
+    {
+        for(int col = 0; col < m_width; col++)
+        {
+            for(int row = 0; row < m_height; row++)
+            {
+                if(row < m_height * i) {
+                    SetColor(GetColor(col, m_height * i), col, row);
+                }
+            }
+        }
+    }
+    
+    
+}

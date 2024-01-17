@@ -36,6 +36,8 @@ public:
     void GaussianBlur(int kernelSize, float sigma);
     void ColorToGray();
     void LaplacianEdgeDetection();
+    void StretchH(float i, bool l_r);
+    void StretchV(float i, bool u_d);
 private:
     int m_width;
     int m_height;
