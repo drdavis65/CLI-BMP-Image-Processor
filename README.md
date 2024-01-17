@@ -19,3 +19,10 @@ Run the compiled program with the desired operations:
 For example:
 
 ```./image_processor sample.bmp -fv -g 5 1.0```
+
+## To Do List:
+
+- Does not work with all BMP files, just the most basic of formats (no compression)
+- Edge detection needs further work
+- CUDA revision... convert all functions to CUDA kernels
+- Make a GUI instead of command-line
