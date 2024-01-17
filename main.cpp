@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
         } else if (arg == "-bw") {
             process += "_greyscale";
             image.ColorToGray();
-        } else if (arg == "-e") {
+        } else if (arg == "-edge") {
             process += "_edgeDetect";
             image.LaplacianEdgeDetection();
         }
