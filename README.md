@@ -9,6 +9,7 @@ This project is a C++ application designed for basic image processing. It includ
 - **Gaussian Blur (-g)**: Apply Gaussian blur with specified kernel size and sigma value.
 - **Convert to Grayscale (-bw)**: Convert images to grayscale.
 - **Laplacian Edge Detection (-edge)**: Detect edges using the Laplacian method.
+- **Stretching (-stretchU, -stretchD, -stretchL, -stretchR)**: Copies pixels of row/column past a specified position on the image.
 
 ## Usage
 
@@ -19,6 +20,7 @@ Run the compiled program with the desired operations:
 For example:
 
 ```./image_processor sample.bmp -fv -g 5 1.0```
+```./image_processor sample.bmp -stretchR .5```
 
 ## To Do List:
 
