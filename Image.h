@@ -34,6 +34,8 @@ public:
     void InvertColors();
     float** CreateGaussianKernel(int size, float sigma);
     void GaussianBlur(int kernelSize, float sigma);
+    void ColorToGray();
+    void LaplacianEdgeDetection();
 private:
     int m_width;
     int m_height;

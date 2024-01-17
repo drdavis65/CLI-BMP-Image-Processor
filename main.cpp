@@ -52,6 +52,12 @@ int main(int argc, char* argv[])
             int kernelSize = std::atoi(argv[++i]);
             float sigma = std::atof(argv[++i]);
             image.GaussianBlur(kernelSize, sigma);
+        } else if (arg == "-bw") {
+            process += "_greyscale";
+            image.ColorToGray();
+        } else if (arg == "-e") {
+            process += "_edgeDetect";
+            image.LaplacianEdgeDetection();
         }
     }
     filename = filename.substr(0, filename.size()-4);

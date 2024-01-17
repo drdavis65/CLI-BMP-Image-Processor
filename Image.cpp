@@ -6,24 +6,20 @@
 Color::Color()
     : r(0), g(0), b(0)
 {
-
 }
 
 Color::Color(float r, float g, float b)
     : r(r), g(g), b(b)
 {
-
 }
 
 Color::~Color()
 {
-
 }
 
 Image::Image()
     : m_width(0), m_height(0), m_colors(nullptr)
 {
-    
 }
 
 Image::Image(int width, int height)
@@ -345,4 +341,51 @@ void Image::GaussianBlur(int kernelSize, float sigma)
     }
     delete[] kernel;
 }
+
+void Image::ColorToGray()
+{
+    for(int col = 0; col < m_width; col++)
+    {
+        for(int row = 0; row < m_height; row++)
+        {
+            Color ogColor = GetColor(col, row);
+            float grayScale = 0.299 * ogColor.r + 0.587 * ogColor.g + 0.114 * ogColor.b;
+            SetColor(Color(grayScale, grayScale, grayScale), col, row);
+        }
+    }
+}
+
+
+void Image::LaplacianEdgeDetection() {
+    ColorToGray();
+    // Laplacian kernel
+    float laplacianKernel[3][3] = {
+        { 0, -1,  0 },
+        {-1,  4, -1 },
+        { 0, -1,  0 }
+    };
+
+    Image tempImage = *this;
+
+    for (int x = 1; x < m_width - 1; ++x) {
+        for (int y = 1; y < m_height - 1; ++y) {
+            float edgeStrength = 0.0f;
+
+            for (int i = -1; i <= 1; ++i) {
+                for (int j = -1; j <= 1; ++j) {
+                    Color sampleColor = tempImage.GetColor(x + i, y + j);
+                    float intensity = sampleColor.r;
+                    edgeStrength += intensity * laplacianKernel[i + 1][j + 1];
+                }
+            }
+
+            // Set the new color based on edge strength
+            float newColorValue = std::min(std::max(edgeStrength, 0.0f), 1.0f);
+            Color edgeColor = {newColorValue, newColorValue, newColorValue};
+            SetColor(edgeColor, x, y);
+        }
+    }
+}
+
+
 
