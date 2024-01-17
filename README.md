@@ -20,6 +20,7 @@ Run the compiled program with the desired operations:
 For example:
 
 ```./image_processor sample.bmp -fv -g 5 1.0```
+
 ```./image_processor sample.bmp -stretchR .5```
 
 ## To Do List:
