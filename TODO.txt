@@ -1,0 +1,2 @@
+-change image class to include headers from read and apply them to export
+-optimize with openMP
